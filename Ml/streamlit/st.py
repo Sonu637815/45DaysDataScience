@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import altair as alt
+import time 
 
 ##page configuration
 st.set_page_config(
@@ -54,3 +55,93 @@ fig , ax = plt.subplots()
 ax.plot(df.index,df.a)
 st.pyplot(fig)
 st.divider()
+
+st.header("5.Widgets")
+with st.form("input form"):
+    name = st.text_input("enter your name")
+    age = st.number_input("enter your age")
+    mod = st.radio("select your mode",("happy","sad","neutral"))
+    language=st.multiselect("select your language",("english","hindi","gujarati"))
+    submit = st.form_submit_button("submit")
+    if submit:
+        st.write("name:",name)
+        st.write("age:",age)
+        st.write("mode:",mod)
+        st.write("language:",language)
+
+
+col1 ,col2, col3 = st.columns((4,1,1))
+with col1:
+    st.text_input("enter your name")
+    st.number_input("enter your age")
+with col2:
+    st.radio("select your mode",("happy","sad","neutral"))
+    st.multiselect("select your language",("english","hindi","gujarati"))
+with col3:
+
+    st.title("Output")
+
+
+#with st.form("input form"):
+#    col1, col2 = st.columns(2)
+#    with col1:
+#        name = st.text_input("enter your name")
+#       age = st.number_input("enter your age")
+#    with col2:
+#        mod = st.radio("select your mode",("happy","sad","neutral"))
+#        language=st.multiselect("select your language",("english","hindi","gujarati"))
+#    submit = st.form_submit_button("submit")
+#   if submit:
+#
+
+col1,col2 = st.columns(2)
+with col1:
+    number = st.slider("select a number",0,100)
+with col2:
+    colour = st.color_picker("select a colour","#00FF00")
+
+
+
+st.text_area("Enter your message")
+st.date_input("Select a date")
+st.time_input("Select a time")
+st.file_uploader("Upload a file")
+
+
+st.header("6. Media")
+st.image("https://picsum.photos/400",caption="random image")
+st.video("https://w3schools.com/html/mov_bbb.mp4")
+st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
+
+
+
+st.sidebar.header("Sidebar header")
+st.sidebar.write("this is a sidebar text")
+st.sidebar.button("click me")
+option = st.sidebar.selectbox("select an option",("option 1","option 2","option 3"))
+
+
+##
+tab1,tab2,tab3 = st.tabs(["tab1","tab2","tab3"])
+with tab1:
+    st.write("this is a tab1")
+with tab2:
+    st.write("this is a tab2")
+with tab3:
+    st.write("this is a tab3")
+
+
+
+
+with st.container():
+    st.write("this is a container")
+
+with st.expander("expander"):
+    st.write("this is an expander")
+
+with st.spinner("loading data..."):
+    time.sleep(2)
+
+st.toast("toast message",icon="😃")
+
+st.page_link("http://streamlit.io",label="streamlit website",icon="☠️")
