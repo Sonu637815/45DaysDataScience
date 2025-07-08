@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -578,4 +579,586 @@
         });
     </script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Prediction System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .form-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 1.1rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideInRight 0.8s ease-out;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-header h2 {
+            font-size: 1.8rem;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+        }
+
+        .crop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .crop-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f7fafc;
+        }
+
+        .crop-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .crop-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(45deg, #a8e6cf, #dcedc1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #4a5568;
+        }
+
+        .crop-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .crop-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            text-transform: capitalize;
+        }
+
+        .crop-score {
+            font-size: 0.9rem;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .score-bar {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #a0aec0;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-section, .results-section {
+                padding: 1.5rem;
+            }
+
+            .crop-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Sample Data */
+        .sample-data {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .sample-btn {
+            background: linear-gradient(45deg, #a8e6cf, #dcedc1);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .sample-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(168, 230, 207, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-seedling"></i> Crop Prediction System</h1>
+            <p>Intelligent crop recommendations based on soil and environmental conditions</p>
+        </div>
+
+        <div class="main-content">
+            <div class="form-section">
+                <h2><i class="fas fa-leaf"></i> Environmental Parameters</h2>
+                
+                <form id="cropForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nitrogen">Nitrogen (N)</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-atom input-icon"></i>
+                                <input type="number" class="form-control" id="nitrogen" placeholder="90" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phosphorus">Phosphorus (P)</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-flask input-icon"></i>
+                                <input type="number" class="form-control" id="phosphorus" placeholder="42" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="potassium">Potassium (K)</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-vial input-icon"></i>
+                                <input type="number" class="form-control" id="potassium" placeholder="43" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="temperature">Temperature (°C)</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-thermometer-half input-icon"></i>
+                                <input type="number" step="0.1" class="form-control" id="temperature" placeholder="26.5" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="humidity">Humidity (%)</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-tint input-icon"></i>
+                                <input type="number" step="0.1" class="form-control" id="humidity" placeholder="80" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ph">pH Level</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-balance-scale input-icon"></i>
+                                <input type="number" step="0.1" class="form-control" id="ph" placeholder="6.5" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="rainfall">Rainfall (mm)</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-cloud-rain input-icon"></i>
+                                <input type="number" step="0.1" class="form-control" id="rainfall" placeholder="120.5" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-search"></i> Predict Crops
+                    </button>
+                </form>
+
+                <div class="sample-data">
+                    <button type="button" class="sample-btn" onclick="loadSampleData()">
+                        <i class="fas fa-magic"></i> Load Sample Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <div class="results-header">
+                    <h2><i class="fas fa-chart-line"></i> Crop Recommendations</h2>
+                    <p>Based on your environmental parameters</p>
+                </div>
+
+                <div id="cropResults" class="crop-grid">
+                    <div class="empty-state">
+                        <i class="fas fa-seedling"></i>
+                        <p>Enter your parameters and click "Predict Crops" to see recommendations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Crop Prediction System | Developed with <i class="fas fa-heart" style="color: #e74c3c;"></i> for sustainable agriculture</p>
+    </div>
+
+    <script>
+        // Sample crop data for demonstration
+        const sampleCrops = [
+            { name: 'rice', score: 85, icon: '🌾' },
+            { name: 'wheat', score: 78, icon: '🌾' },
+            { name: 'cotton', score: 65, icon: '🌱' },
+            { name: 'sugarcane', score: 72, icon: '🎋' },
+            { name: 'maize', score: 68, icon: '🌽' },
+            { name: 'barley', score: 55, icon: '🌾' }
+        ];
+
+        // Form submission handler
+        document.getElementById('cropForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const button = this.querySelector('.submit-btn');
+            const originalText = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '<div class="loading"></div> Analyzing...';
+            button.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                displayResults();
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1500);
+        });
+
+        function displayResults() {
+            const resultsContainer = document.getElementById('cropResults');
+            
+            // Filter crops with score > 50 for demonstration
+            const recommendedCrops = sampleCrops.filter(crop => crop.score > 50);
+            
+            if (recommendedCrops.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>No suitable crops found for these conditions</p>
+                    </div>
+                `;
+                return;
+            }
+
+            resultsContainer.innerHTML = recommendedCrops.map(crop => `
+                <div class="crop-card">
+                    <div class="crop-image">
+                        ${crop.icon}
+                    </div>
+                    <div class="crop-info">
+                        <div class="crop-name">${crop.name}</div>
+                        <div class="crop-score">Suitability: ${crop.score}%</div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: ${crop.score}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadSampleData() {
+            document.getElementById('nitrogen').value = 90;
+            document.getElementById('phosphorus').value = 42;
+            document.getElementById('potassium').value = 43;
+            document.getElementById('temperature').value = 26.5;
+            document.getElementById('humidity').value = 80;
+            document.getElementById('ph').value = 6.5;
+            document.getElementById('rainfall').value = 120.5;
+            
+            // Add a subtle animation to indicate data has been loaded
+            const form = document.querySelector('.form-section');
+            form.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                form.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Add input animations
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+>>>>>>> dd267d02733f0323109698638ff48acfef344026
 </html>
